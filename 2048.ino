@@ -1,3 +1,19 @@
+// pin wiring to Nano
+//TFT
+// GND ----- GND
+// VCC ----- 3V3
+// SCL ----- D13
+// SDA ----- D11
+// RES ----- D6
+// DC ------ D7
+// CS ------ D8
+// BLK ----- 3V3
+//Buttons
+// UP ------ 5
+// DOWN ---- 4
+// LEFT ---- 3
+// RIGHT --- 2
+
 #include "ClickButton.h"
 #include "TFT.h"
 
