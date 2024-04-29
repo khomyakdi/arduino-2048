@@ -49,28 +49,52 @@ void setup() {
   Serial.println("Started");
 }
 
+const uint16_t tileSize = 60;
+int field[4][4] = {
+  {2, 4, 8, 16},
+  {32, 64, 128, 256},
+  {512, 1024, 2048, 4096},
+  {8192, 0, 0, 0},
+};
+
+void drawField() {
+  uint8_t x = 0;
+  uint8_t y = 0;
+  
+  for(int i = 0; i<4;i = i + 1) {
+        for(int j = 0; j < 4; j = j + 1) {
+          x = i*tileSize;
+          y = j*tileSize;
+          int fieldValue = field[j][i];
+          String val = fieldValue == 0 ? String(' ') : String(fieldValue);
+          
+          tft.placeSquare(x, y, tileSize, tileSize,ST77XX_YELLOW, ST77XX_MAGENTA);
+          tft.placeText(x+5, y+5, val, ST77XX_WHITE, 2);
+        }
+    }
+}
+
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
-    tft.drawFullScreenText("UP", ST77XX_WHITE);
+    drawField();
     return;
   }
 
   if(downBtn.isPressed()) {
     Serial.println("down");
-    tft.drawFullScreenText("DOWN", ST77XX_WHITE);
+    drawField();
     return;
   }
   
   if(leftBtn.isPressed()) {
     Serial.println("left");
-    tft.drawFullScreenText("LEFT", ST77XX_WHITE);
+    drawField();
     return;
   }
   
   if(rightBtn.isPressed()) {
-    Serial.println("right");
-    tft.drawFullScreenText("RIGHT", ST77XX_WHITE);
+    drawField();
     return;
   }
 }

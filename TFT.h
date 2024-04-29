@@ -32,4 +32,16 @@ class TFT {
 			this->tft->setTextWrap(true);
 			this->tft->print(text);
 		}
+
+    void placeSquare(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint16_t borderColor, uint16_t bgColor) {
+      this->tft->drawRect(x, y, width, height,borderColor);
+      this->tft->fillRect(x+1, y+1, width - 1, height - 1, bgColor);
+    }
+
+    void placeText(uint8_t x, uint8_t y, String text, uint16_t color, uint8_t size) {
+      this->tft->setCursor(x,y);
+      this->tft->setTextColor(color);
+      this->tft->setTextSize(size);
+      this->tft->print(text);
+    }
 };
