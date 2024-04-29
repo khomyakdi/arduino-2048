@@ -25,7 +25,7 @@ class TFT {
 			Serial.println("Serial initiated");
 		}
 
-		void drawFullScreenText(char *text, uint16_t color) {
+		void drawFullScreenText(String text, uint16_t color) {
 			this->tft->fillScreen(bg);
 			this->tft->setCursor(0, 0);
 			this->tft->setTextColor(color);
