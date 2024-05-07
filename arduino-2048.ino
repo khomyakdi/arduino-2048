@@ -34,28 +34,40 @@ ClickButton downBtn = ClickButton(K3);
 ClickButton leftBtn = ClickButton(K2);
 ClickButton rightBtn = ClickButton(K1);
 
-void setup() {
-  Serial.begin(9600);
+const uint16_t tileSize = 60;
+int (*field)[4] = new int[4][4];
 
-  tft.init(2, ST77XX_BLACK);
-  tft.drawFullScreenText("Hello", ST77XX_WHITE);
-  
-  upBtn.init();
-  downBtn.init();
-  leftBtn.init();
-  rightBtn.init();
+//Methods for field
 
-  
-  Serial.println("Started");
+void resetField() {
+  for(int i = 0; i < 4; i++)
+    for(int j = 0; j < 4; j++)
+      field[i][j] = 0;  
 }
 
-const uint16_t tileSize = 60;
-int field[4][4] = {
-  {2, 4, 8, 16},
-  {32, 64, 128, 256},
-  {512, 1024, 2048, 4096},
-  {8192, 0, 0, 0},
-};
+bool containsEmpty() {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      if (field[i][j] == 0)
+        return true;
+
+  return false;
+}
+
+void setRandomElement() {
+  int value = random(0, 2) == 0 ? 2 : 4;
+
+  if(containsEmpty())
+    while(true) {
+      int x = random(0, 4);
+      int y = random(0, 4);
+      
+      if(field[x][y] == 0) {
+        field[x][y] = value;
+        break;
+      }
+    }
+}
 
 void drawField() {
   uint8_t x = 0;
@@ -68,15 +80,35 @@ void drawField() {
           int fieldValue = field[j][i];
           String val = fieldValue == 0 ? String(' ') : String(fieldValue);
           
-          tft.placeSquare(x, y, tileSize, tileSize,ST77XX_YELLOW, ST77XX_MAGENTA);
-          tft.placeText(x+5, y+5, val, ST77XX_WHITE, 2);
+          tft.placeSquare(x, y, tileSize, tileSize,ST77XX_YELLOW, ST77XX_BLACK);
+          tft.placeText(x+5, y+5, val, ST77XX_GREEN, 2);
         }
     }
+}
+
+void setup() {
+  Serial.begin(9600);
+
+  tft.init(2, ST77XX_BLACK);
+  
+  upBtn.init();
+  downBtn.init();
+  leftBtn.init();
+  rightBtn.init();
+
+  randomSeed(analogRead(0));
+
+  resetField();
+  setRandomElement();
+  drawField();
+      
+  Serial.println("Started");
 }
 
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
+    setRandomElement();
     drawField();
     return;
   }
