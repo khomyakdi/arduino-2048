@@ -39,12 +39,6 @@ int (*field)[4] = new int[4][4];
 
 //Methods for field
 
-void resetField() {
-  for(int i = 0; i < 4; i++)
-    for(int j = 0; j < 4; j++)
-      field[i][j] = 0;  
-}
-
 bool containsEmpty() {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++)
@@ -86,6 +80,16 @@ void drawField() {
     }
 }
 
+void resetField() {
+  for(int i = 0; i < 4; i++)
+    for(int j = 0; j < 4; j++)
+      field[i][j] = 0;  
+
+   setRandomElement();
+   drawField();
+}
+
+
 void switchElements(int x1, int y1, int x2, int y2) {
   field[x1][y1] += field[x2][y2];
   field[x2][y2] = field[x1][y1] - field[x2][y2];
@@ -126,6 +130,105 @@ bool shiftTop() {
   return moved;
 }
 
+bool shiftBottom() {
+  bool switched = true;
+  bool moved = false;
+  while (switched == true) {
+    switched = false;
+    for (int raw_i = 0; raw_i < 4; raw_i++) {
+      for (int line_i = 0; line_i < 4 - 1; line_i++) {
+        if (field[line_i + 1][raw_i] == 0 && field[line_i][ raw_i] != 0) {
+          switchElements(line_i + 1, raw_i, line_i, raw_i);
+          switched = true;
+          moved = true;
+        }
+      }
+    }
+  }
+     
+  for(int j=0;j< 4; j++) {
+    for(int i= 4 - 1;i>0;i--) {
+      if(field[i][j]== field[i-1][j]&& field[i][j]!=0) {
+        for(int i2=i;i2>0;i2--) {
+          field[i2][j]= field[i2-1][j];
+        }
+
+        field[i][j]*=2;
+        field[0][j]=0;
+        moved = true;
+      }
+    }
+  }
+  
+  return moved;
+}
+
+bool shiftLeft() {
+  bool switched = true;
+  bool moved = false;
+  
+  while (switched == true) {
+    switched = false;
+    for (int line_i = 0; line_i < 4; line_i++) {
+      for (int raw_i = 4 - 1; raw_i > 0; raw_i--) {
+        if (field[line_i][raw_i - 1] == 0 && field[line_i][raw_i] != 0) {
+          switchElements(line_i, raw_i-1, line_i, raw_i);
+          switched = true;
+          moved = true;
+        }
+      }
+    }
+  }
+        
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4 - 1; j++) {
+      if (field[i][j] == field[i][j + 1] && field[i][j] != 0) {
+        for (int j2 = j + 1; j2 < 4 - 1; j2++) {
+          field[i][j2] = field[i][j2 + 1];
+        }
+        
+        field[i][j] *= 2;
+        field[i][4 - 1] = 0;
+        moved = true;
+      }
+    }
+  }
+  
+  return moved;
+}
+
+bool shiftRight() {
+  bool switched = true;
+  bool moved = false;
+  while (switched == true) {
+    switched = false;
+    for (int line_i = 0; line_i < 4; line_i++) {
+      for (int raw_i = 0; raw_i < 4 - 1; raw_i++) {
+        if (field[line_i][raw_i + 1] == 0 && field[line_i][raw_i] != 0) {
+          switchElements(line_i, raw_i+1, line_i, raw_i);
+          switched = true;
+          moved = true;
+        }
+      }
+    }
+  }
+  
+  for (int i = 0; i < 4; i++) {
+    for (int j = 4 - 1; j > 0; j--) {
+      if (field[i][j] == field[i][ j - 1] && field[i][j] != 0) {
+        for (int j2 = j - 1; j2 > 0; j2--) {
+          field[i][j2] = field[i][j2 - 1];
+        }
+        
+        field[i][ j] *= 2;
+        field[i][0] = 0;
+        moved = true;
+      }
+    }
+  }
+  
+  return moved;
+}
 //End of methods for field
 
 void setup() {
@@ -141,16 +244,18 @@ void setup() {
   randomSeed(analogRead(0));
 
   resetField();
-  setRandomElement();
-  drawField();
       
   Serial.println("Started");
 }
 
+bool lose = false;
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
-
+    
+    if(lose)
+      resetField();
+    
     if(shiftTop()) {
       setRandomElement();
       drawField();
@@ -161,18 +266,44 @@ void loop() {
 
   if(downBtn.isPressed()) {
     Serial.println("down");
-    drawField();
+    
+    if(lose)
+      resetField(); 
+      
+    if(shiftBottom()) {
+      setRandomElement();
+      drawField();
+    }
     return;
   }
   
-  if(leftBtn.isPressed()) {
+  if(leftBtn.isPressed()) {    
     Serial.println("left");
-    drawField();
+    
+    if(lose)
+      resetField();
+  
+    if(shiftLeft()) {
+      setRandomElement();
+      drawField();  
+    }
+    
     return;
   }
   
   if(rightBtn.isPressed()) {
-    drawField();
+    Serial.println("right");
+    
+    if(lose)
+      resetField();
+  
+    if(shiftRight()) {
+      setRandomElement();
+      drawField();  
+    }
+    
     return;
   }
+
+  lose = !containsEmpty();
 }
