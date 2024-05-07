@@ -86,6 +86,48 @@ void drawField() {
     }
 }
 
+void switchElements(int x1, int y1, int x2, int y2) {
+  field[x1][y1] += field[x2][y2];
+  field[x2][y2] = field[x1][y1] - field[x2][y2];
+  field[x1][x2] -= field[x2][y2];
+}
+
+bool shiftTop() {
+  bool moved = false;
+  bool switched = true;
+
+  while (switched == true) {
+    switched = false;
+    for (int raw_i = 0; raw_i < 4; raw_i++) {
+      for (int line_i = 4 - 1; line_i > 0; line_i--) {
+        if (field[line_i - 1][raw_i] == 0 && field[line_i][raw_i]!=0) {
+          switchElements(line_i - 1, raw_i, line_i, raw_i);
+          switched = true;
+          moved = true;
+        }
+      }
+    }
+  }
+
+  for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < 4 - 1; i++) {
+      if (field[i][j] == field[i + 1][j] && field[i][j] != 0) {
+        for (int i2 = i + 1; i2 < 4 - 1; i2++) {
+          field[i2][j] = field[i2 + 1][j];
+        }
+        
+        field[i][j] *= 2;
+        field[4 - 1][j] = 0;
+        moved = true;
+      }
+    }
+  }
+  
+  return moved;
+}
+
+//End of methods for field
+
 void setup() {
   Serial.begin(9600);
 
@@ -108,8 +150,12 @@ void setup() {
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
-    setRandomElement();
-    drawField();
+
+    if(shiftTop()) {
+      setRandomElement();
+      drawField();
+    }
+  
     return;
   }
 
