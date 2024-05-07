@@ -34,6 +34,48 @@ ClickButton downBtn = ClickButton(K3);
 ClickButton leftBtn = ClickButton(K2);
 ClickButton rightBtn = ClickButton(K1);
 
+int16_t getColorByValue(int val) {
+  switch(val) {
+    case 0:
+    case 2:
+    case 4:
+      return 0x736C;
+    default:
+      return 0xFFBE;
+  }
+}
+
+int16_t getBgColorByValue(int val) {
+  switch(val) {
+    case 0:
+      return 0xBD74;
+    case 2:
+      return 0xEF3B;
+    case 4:
+      return 0xEF19;
+    case 8:
+     return 0xF58F;
+    case 16:
+     return 0xF4AC;
+    case 32:
+      return 0xF3EB;
+    case 64:
+      return 0xF2E7;
+    case 128:
+      return 0xEE8E;
+    case 256:
+      return 0xEE6C;
+    case 512:
+      return 0xEE4A;
+    case 1024:
+      return 0xEE27;
+    case 2048:
+      return 0xEE05;
+    default:
+      return 0x39C6;
+  }
+}
+
 const uint16_t tileSize = 60;
 int (*field)[4] = new int[4][4];
 
@@ -73,9 +115,16 @@ void drawField() {
           y = j*tileSize;
           int fieldValue = field[j][i];
           String val = fieldValue == 0 ? String(' ') : String(fieldValue);
-          
-          tft.placeSquare(x, y, tileSize, tileSize,ST77XX_YELLOW, ST77XX_BLACK);
-          tft.placeText(x+5, y+5, val, ST77XX_GREEN, 2);
+          int16_t tileBgColor = getBgColorByValue(fieldValue);
+          tft.placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
+          int16_t tileColor = getColorByValue(fieldValue);
+          int8_t textSize = 3;
+          if(val > 64)
+            textSize = 2;
+          if(val > 512)
+            textSize = 1;
+            
+          tft.placeText(x+5, y+5, val, tileColor, textSize);
         }
     }
 }
