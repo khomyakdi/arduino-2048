@@ -119,9 +119,9 @@ void drawField() {
           tft.placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
           int16_t tileColor = getColorByValue(fieldValue);
           int8_t textSize = 3;
-          if(val > 64)
+          if(fieldValue > 64)
             textSize = 2;
-          if(val > 512)
+          if(fieldValue > 512)
             textSize = 1;
             
           tft.placeText(x+5, y+5, val, tileColor, textSize);
