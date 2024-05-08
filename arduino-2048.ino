@@ -151,10 +151,10 @@ bool shiftTop() {
 
   while (switched == true) {
     switched = false;
-    for (int raw_i = 0; raw_i < 4; raw_i++) {
-      for (int line_i = 4 - 1; line_i > 0; line_i--) {
-        if (field[line_i - 1][raw_i] == 0 && field[line_i][raw_i]!=0) {
-          switchElements(line_i - 1, raw_i, line_i, raw_i);
+    for (int i = 0; i < 4; i++) {
+      for (int j = 4 - 1; j > 0; j--) {
+        if (field[j - 1][i] == 0 && field[j][i]!=0) {
+          switchElements(j - 1, i, j, i);
           switched = true;
           moved = true;
         }
@@ -165,8 +165,8 @@ bool shiftTop() {
   for (int j = 0; j < 4; j++) {
     for (int i = 0; i < 4 - 1; i++) {
       if (field[i][j] == field[i + 1][j] && field[i][j] != 0) {
-        for (int i2 = i + 1; i2 < 4 - 1; i2++) {
-          field[i2][j] = field[i2 + 1][j];
+        for (int k = i + 1; k < 4 - 1; k++) {
+          field[k][j] = field[k + 1][j];
         }
         
         field[i][j] *= 2;
@@ -184,10 +184,10 @@ bool shiftBottom() {
   bool moved = false;
   while (switched == true) {
     switched = false;
-    for (int raw_i = 0; raw_i < 4; raw_i++) {
-      for (int line_i = 0; line_i < 4 - 1; line_i++) {
-        if (field[line_i + 1][raw_i] == 0 && field[line_i][ raw_i] != 0) {
-          switchElements(line_i + 1, raw_i, line_i, raw_i);
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4 - 1; j++) {
+        if (field[j + 1][i] == 0 && field[j][ i] != 0) {
+          switchElements(j + 1, i, j, i);
           switched = true;
           moved = true;
         }
@@ -198,8 +198,8 @@ bool shiftBottom() {
   for(int j=0;j< 4; j++) {
     for(int i= 4 - 1;i>0;i--) {
       if(field[i][j]== field[i-1][j]&& field[i][j]!=0) {
-        for(int i2=i;i2>0;i2--) {
-          field[i2][j]= field[i2-1][j];
+        for(int k=i;k>0;k--) {
+          field[k][j]= field[k-1][j];
         }
 
         field[i][j]*=2;
@@ -218,10 +218,10 @@ bool shiftLeft() {
   
   while (switched == true) {
     switched = false;
-    for (int line_i = 0; line_i < 4; line_i++) {
-      for (int raw_i = 4 - 1; raw_i > 0; raw_i--) {
-        if (field[line_i][raw_i - 1] == 0 && field[line_i][raw_i] != 0) {
-          switchElements(line_i, raw_i-1, line_i, raw_i);
+    for (int j = 0; j < 4; j++) {
+      for (int i = 4 - 1; i > 0; i--) {
+        if (field[j][i - 1] == 0 && field[j][i] != 0) {
+          switchElements(j, i-1, j, i);
           switched = true;
           moved = true;
         }
@@ -251,10 +251,10 @@ bool shiftRight() {
   bool moved = false;
   while (switched == true) {
     switched = false;
-    for (int line_i = 0; line_i < 4; line_i++) {
-      for (int raw_i = 0; raw_i < 4 - 1; raw_i++) {
-        if (field[line_i][raw_i + 1] == 0 && field[line_i][raw_i] != 0) {
-          switchElements(line_i, raw_i+1, line_i, raw_i);
+    for (int j = 0; j < 4; j++) {
+      for (int i = 0; i < 4 - 1; i++) {
+        if (field[j][i + 1] == 0 && field[j][i] != 0) {
+          switchElements(j, i+1, j, i);
           switched = true;
           moved = true;
         }
