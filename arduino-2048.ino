@@ -315,59 +315,47 @@ void setup() {
 }
 
 bool lose = false;
+
+void prepareNextMove(bool shifted) {
+  if(!shifted && !hasMoves()) {
+    resetField();
+    return;
+  }
+
+  if(!shifted)
+    return;
+  
+  
+  setRandomElement();
+  drawField();  
+}
+
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
     
-    if(lose)
-      resetField();
-    
-    if(shiftTop()) {
-      setRandomElement();
-      drawField();
-    }
-  
+    prepareNextMove(shiftTop());
     return;
   }
 
   if(downBtn.isPressed()) {
     Serial.println("down");
     
-    if(lose)
-      resetField(); 
-      
-    if(shiftBottom()) {
-      setRandomElement();
-      drawField();
-    }
+    prepareNextMove(shiftBottom());
     return;
   }
   
   if(leftBtn.isPressed()) {    
     Serial.println("left");
     
-    if(lose)
-      resetField();
-  
-    if(shiftLeft()) {
-      setRandomElement();
-      drawField();  
-    }
-    
+    prepareNextMove(shiftLeft());    
     return;
   }
   
   if(rightBtn.isPressed()) {
     Serial.println("right");
     
-    if(lose)
-      resetField();
-  
-    if(shiftRight()) {
-      setRandomElement();
-      drawField();  
-    }
-    
+    prepareNextMove(shiftRight());    
     return;
   }
 
