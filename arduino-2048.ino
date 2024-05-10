@@ -278,6 +278,23 @@ bool shiftRight() {
   
   return moved;
 }
+
+bool hasMoves() {
+  for(int i = 0; i < 3; i++)
+    for(int j = 0; j < 3; j++)
+      if(field[i][j] == field[i][j + 1] || field[i][j] == field[i + 1][j])
+        return true;
+        
+  for(int i = 0; i < 3; i++)
+    if(field[i][3]==field[i+1][3])
+      return true;
+
+  for(int i = 0; i < 3; i++)
+    if(field[3][i]==field[3][i + 1])
+      return true;
+
+  return false;            
+}
 //End of methods for field
 
 void setup() {
@@ -354,5 +371,5 @@ void loop() {
     return;
   }
 
-  lose = !containsEmpty();
+  lose = !hasMoves();
 }
