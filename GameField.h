@@ -16,7 +16,7 @@ public:
 
     while (switched == true) {
       switched = false;
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i++)
         for (int j = 3; j > 0; j--) {
           if (field[j - 1][i] == 0 && field[j][i]!=0) {
             switchElements(j - 1, i, j, i);
@@ -24,22 +24,18 @@ public:
             moved = true;
           }
         }
-      }
     }
 
-    for (int j = 0; j < 4; j++) {
-      for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 4; j++)
+      for (int i = 0; i < 3; i++)
         if (field[i][j] == field[i + 1][j] && field[i][j] != 0) {
-          for (int k = i + 1; k < 3; k++) {
+          for (int k = i + 1; k < 3; k++)
             field[k][j] = field[k + 1][j];
-          }
           
           field[i][j] *= 2;
           field[3][j] = 0;
           moved = true;
         }
-      }
-    }
     
     prepateNextMove(moved);
   }
@@ -49,30 +45,25 @@ public:
     bool moved = false;
     while (switched == true) {
       switched = false;
-      for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 3; j++) {
+      for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 3; j++)
           if (field[j + 1][i] == 0 && field[j][ i] != 0) {
             switchElements(j + 1, i, j, i);
             switched = true;
             moved = true;
           }
-        }
-      }
     }
       
-    for(int j=0;j< 4; j++) {
-      for(int i= 3;i>0;i--) {
+    for(int j=0;j< 4; j++)
+      for(int i= 3;i>0;i--)
         if(field[i][j]== field[i-1][j]&& field[i][j]!=0) {
-          for(int k=i;k>0;k--) {
+          for(int k=i;k>0;k--)
             field[k][j]= field[k-1][j];
-          }
 
           field[i][j]*=2;
           field[0][j]=0;
           moved = true;
         }
-      }
-    }
     
    prepateNextMove(moved);
   }
@@ -83,30 +74,25 @@ public:
     
     while (switched == true) {
       switched = false;
-      for (int j = 0; j < 4; j++) {
-        for (int i = 3; i > 0; i--) {
+      for (int j = 0; j < 4; j++)
+        for (int i = 3; i > 0; i--)
           if (field[j][i - 1] == 0 && field[j][i] != 0) {
             switchElements(j, i-1, j, i);
             switched = true;
             moved = true;
           }
-        }
-      }
     }
           
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < 4; i++)
+      for (int j = 0; j < 3; j++)
         if (field[i][j] == field[i][j + 1] && field[i][j] != 0) {
-          for (int j2 = j + 1; j2 < 3; j2++) {
+          for (int j2 = j + 1; j2 < 3; j2++)
             field[i][j2] = field[i][j2 + 1];
-          }
           
           field[i][j] *= 2;
           field[i][3] = 0;
           moved = true;
         }
-      }
-    }
     
     prepateNextMove(moved);
   }
@@ -116,30 +102,25 @@ public:
     bool moved = false;
     while (switched == true) {
       switched = false;
-      for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 4; j++)
+        for (int i = 0; i < 3; i++)
           if (field[j][i + 1] == 0 && field[j][i] != 0) {
             switchElements(j, i+1, j, i);
             switched = true;
             moved = true;
           }
-        }
-      }
     }
     
-    for (int i = 0; i < 4; i++) {
-      for (int j = 3; j > 0; j--) {
+    for (int i = 0; i < 4; i++) 
+      for (int j = 3; j > 0; j--)
         if (field[i][j] == field[i][ j - 1] && field[i][j] != 0) {
-          for (int j2 = j - 1; j2 > 0; j2--) {
+          for (int j2 = j - 1; j2 > 0; j2--)
             field[i][j2] = field[i][j2 - 1];
-          }
           
           field[i][ j] *= 2;
           field[i][0] = 0;
           moved = true;
         }
-      }
-    }
     
     prepateNextMove(moved);
   }

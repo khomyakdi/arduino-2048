@@ -1,4 +1,4 @@
-// pin wiring to Nano
+// Pin wiring for ArNano
 //TFT
 // GND ----- GND
 // VCC ----- 3V3
@@ -85,23 +85,24 @@ void drawField() {
   uint8_t y = 0;
   
   for(int i = 0; i<4;i = i + 1) {
-        for(int j = 0; j < 4; j = j + 1) {
-          x = i*tileSize;
-          y = j*tileSize;
-          int fieldValue = gameField.field[j][i];
-          String val = fieldValue == 0 ? String(' ') : String(fieldValue);
-          int16_t tileBgColor = getBgColorByValue(fieldValue);
-          tft.placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
-          int16_t tileColor = getColorByValue(fieldValue);
-          int8_t textSize = 3;
-          if(fieldValue > 64)
-            textSize = 2;
-          if(fieldValue > 512)
-            textSize = 1;
-            
-          tft.placeText(x+5, y+5, val, tileColor, textSize);
-        }
+    for(int j = 0; j < 4; j = j + 1) {
+      x = i*tileSize;
+      y = j*tileSize;
+      int fieldValue = gameField.field[j][i];
+      String val = fieldValue == 0 ? String(' ') : String(fieldValue);
+      int16_t tileBgColor = getBgColorByValue(fieldValue);
+      tft.placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
+      int16_t tileColor = getColorByValue(fieldValue);
+      int8_t textSize = 3;
+      if(fieldValue > 64)
+        textSize = 2;
+
+      if(fieldValue > 512)
+        textSize = 1;
+        
+      tft.placeText(x+5, y+5, val, tileColor, textSize);
     }
+  }
 }
 
 void setup() {
@@ -109,21 +110,17 @@ void setup() {
   randomSeed(analogRead(0));
 
   tft.init(2, ST77XX_BLACK);
-  
   upBtn.init();
   downBtn.init();
   leftBtn.init();
   rightBtn.init();
 
   drawField();
-      
-  Serial.println("Started");
 }
 
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
-    
     gameField.shiftTop();
     drawField();
     return;
@@ -131,7 +128,6 @@ void loop() {
 
   if(downBtn.isPressed()) {
     Serial.println("down");
-    
     gameField.shiftBottom();
     drawField();
     return;
@@ -139,7 +135,6 @@ void loop() {
   
   if(leftBtn.isPressed()) {    
     Serial.println("left");
-    
     gameField.shiftLeft();    
     drawField();
     return;
@@ -147,7 +142,6 @@ void loop() {
   
   if(rightBtn.isPressed()) {
     Serial.println("right");
-    
     gameField.shiftRight();    
     drawField();
     return;
