@@ -16,6 +16,7 @@
 
 #include "ClickButton.h"
 #include "TFT.h"
+#include "GameField.h"
 
 #define TFT_RST 6
 #define TFT_CS 8
@@ -33,6 +34,8 @@ ClickButton upBtn = ClickButton(K4);
 ClickButton downBtn = ClickButton(K3);
 ClickButton leftBtn = ClickButton(K2);
 ClickButton rightBtn = ClickButton(K1);
+
+GameField gameField = GameField();
 
 int16_t getColorByValue(int val) {
   switch(val) {
@@ -77,34 +80,6 @@ int16_t getBgColorByValue(int val) {
 }
 
 const uint16_t tileSize = 60;
-int (*field)[4] = new int[4][4];
-
-//Methods for field
-
-bool containsEmpty() {
-  for (int i = 0; i < 4; i++)
-    for (int j = 0; j < 4; j++)
-      if (field[i][j] == 0)
-        return true;
-
-  return false;
-}
-
-void setRandomElement() {
-  int value = random(0, 2) == 0 ? 2 : 4;
-
-  if(containsEmpty())
-    while(true) {
-      int x = random(0, 4);
-      int y = random(0, 4);
-      
-      if(field[x][y] == 0) {
-        field[x][y] = value;
-        break;
-      }
-    }
-}
-
 void drawField() {
   uint8_t x = 0;
   uint8_t y = 0;
@@ -113,7 +88,7 @@ void drawField() {
         for(int j = 0; j < 4; j = j + 1) {
           x = i*tileSize;
           y = j*tileSize;
-          int fieldValue = field[j][i];
+          int fieldValue = gameField.field[j][i];
           String val = fieldValue == 0 ? String(' ') : String(fieldValue);
           int16_t tileBgColor = getBgColorByValue(fieldValue);
           tft.placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
@@ -129,176 +104,9 @@ void drawField() {
     }
 }
 
-void resetField() {
-  for(int i = 0; i < 4; i++)
-    for(int j = 0; j < 4; j++)
-      field[i][j] = 0;  
-
-   setRandomElement();
-   drawField();
-}
-
-
-void switchElements(int x1, int y1, int x2, int y2) {
-  field[x1][y1] += field[x2][y2];
-  field[x2][y2] = field[x1][y1] - field[x2][y2];
-  field[x1][x2] -= field[x2][y2];
-}
-
-bool shiftTop() {
-  bool moved = false;
-  bool switched = true;
-
-  while (switched == true) {
-    switched = false;
-    for (int i = 0; i < 4; i++) {
-      for (int j = 4 - 1; j > 0; j--) {
-        if (field[j - 1][i] == 0 && field[j][i]!=0) {
-          switchElements(j - 1, i, j, i);
-          switched = true;
-          moved = true;
-        }
-      }
-    }
-  }
-
-  for (int j = 0; j < 4; j++) {
-    for (int i = 0; i < 4 - 1; i++) {
-      if (field[i][j] == field[i + 1][j] && field[i][j] != 0) {
-        for (int k = i + 1; k < 4 - 1; k++) {
-          field[k][j] = field[k + 1][j];
-        }
-        
-        field[i][j] *= 2;
-        field[4 - 1][j] = 0;
-        moved = true;
-      }
-    }
-  }
-  
-  return moved;
-}
-
-bool shiftBottom() {
-  bool switched = true;
-  bool moved = false;
-  while (switched == true) {
-    switched = false;
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4 - 1; j++) {
-        if (field[j + 1][i] == 0 && field[j][ i] != 0) {
-          switchElements(j + 1, i, j, i);
-          switched = true;
-          moved = true;
-        }
-      }
-    }
-  }
-     
-  for(int j=0;j< 4; j++) {
-    for(int i= 4 - 1;i>0;i--) {
-      if(field[i][j]== field[i-1][j]&& field[i][j]!=0) {
-        for(int k=i;k>0;k--) {
-          field[k][j]= field[k-1][j];
-        }
-
-        field[i][j]*=2;
-        field[0][j]=0;
-        moved = true;
-      }
-    }
-  }
-  
-  return moved;
-}
-
-bool shiftLeft() {
-  bool switched = true;
-  bool moved = false;
-  
-  while (switched == true) {
-    switched = false;
-    for (int j = 0; j < 4; j++) {
-      for (int i = 4 - 1; i > 0; i--) {
-        if (field[j][i - 1] == 0 && field[j][i] != 0) {
-          switchElements(j, i-1, j, i);
-          switched = true;
-          moved = true;
-        }
-      }
-    }
-  }
-        
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4 - 1; j++) {
-      if (field[i][j] == field[i][j + 1] && field[i][j] != 0) {
-        for (int j2 = j + 1; j2 < 4 - 1; j2++) {
-          field[i][j2] = field[i][j2 + 1];
-        }
-        
-        field[i][j] *= 2;
-        field[i][4 - 1] = 0;
-        moved = true;
-      }
-    }
-  }
-  
-  return moved;
-}
-
-bool shiftRight() {
-  bool switched = true;
-  bool moved = false;
-  while (switched == true) {
-    switched = false;
-    for (int j = 0; j < 4; j++) {
-      for (int i = 0; i < 4 - 1; i++) {
-        if (field[j][i + 1] == 0 && field[j][i] != 0) {
-          switchElements(j, i+1, j, i);
-          switched = true;
-          moved = true;
-        }
-      }
-    }
-  }
-  
-  for (int i = 0; i < 4; i++) {
-    for (int j = 4 - 1; j > 0; j--) {
-      if (field[i][j] == field[i][ j - 1] && field[i][j] != 0) {
-        for (int j2 = j - 1; j2 > 0; j2--) {
-          field[i][j2] = field[i][j2 - 1];
-        }
-        
-        field[i][ j] *= 2;
-        field[i][0] = 0;
-        moved = true;
-      }
-    }
-  }
-  
-  return moved;
-}
-
-bool hasMoves() {
-  for(int i = 0; i < 3; i++)
-    for(int j = 0; j < 3; j++)
-      if(field[i][j] == field[i][j + 1] || field[i][j] == field[i + 1][j])
-        return true;
-        
-  for(int i = 0; i < 3; i++)
-    if(field[i][3]==field[i+1][3])
-      return true;
-
-  for(int i = 0; i < 3; i++)
-    if(field[3][i]==field[3][i + 1])
-      return true;
-
-  return false;            
-}
-//End of methods for field
-
 void setup() {
   Serial.begin(9600);
+  randomSeed(analogRead(0));
 
   tft.init(2, ST77XX_BLACK);
   
@@ -307,57 +115,41 @@ void setup() {
   leftBtn.init();
   rightBtn.init();
 
-  randomSeed(analogRead(0));
-
-  resetField();
+  drawField();
       
   Serial.println("Started");
-}
-
-bool lose = false;
-
-void prepareNextMove(bool shifted) {
-  if(!shifted && !hasMoves()) {
-    resetField();
-    return;
-  }
-
-  if(!shifted)
-    return;
-  
-  
-  setRandomElement();
-  drawField();  
 }
 
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
     
-    prepareNextMove(shiftTop());
+    gameField.shiftTop();
+    drawField();
     return;
   }
 
   if(downBtn.isPressed()) {
     Serial.println("down");
     
-    prepareNextMove(shiftBottom());
+    gameField.shiftBottom();
+    drawField();
     return;
   }
   
   if(leftBtn.isPressed()) {    
     Serial.println("left");
     
-    prepareNextMove(shiftLeft());    
+    gameField.shiftLeft();    
+    drawField();
     return;
   }
   
   if(rightBtn.isPressed()) {
     Serial.println("right");
     
-    prepareNextMove(shiftRight());    
+    gameField.shiftRight();    
+    drawField();
     return;
   }
-
-  lose = !hasMoves();
 }
