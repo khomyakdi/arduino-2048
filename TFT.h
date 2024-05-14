@@ -67,8 +67,7 @@ class TFT {
       Serial.println("Serial initiated");
     }
 
-    void placeSquare(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint16_t borderColor, uint16_t bgColor) {
-      this->tft->drawRect(x, y, width, height,borderColor);
+    void placeSquare(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint16_t bgColor) {
       this->tft->fillRect(x+1, y+1, width - 1, height - 1, bgColor);
     }
 
@@ -91,7 +90,7 @@ class TFT {
           int fieldValue = field[j][i];
           String val = fieldValue == 0 ? String(' ') : String(fieldValue);
           int16_t tileBgColor = getBgColorByValue(fieldValue);
-          placeSquare(x, y, tSize, tSize, ST77XX_BLACK, tileBgColor);
+          placeSquare(x, y, tSize, tSize, tileBgColor);
 
           int16_t tileTextColor = getColorByValue(fieldValue);
           int8_t textSize = 3;
