@@ -63,8 +63,6 @@ class TFT {
       this->tft->init(tftWidth, tftHeight);
       this->tft->setRotation(2);
       this->tft->fillScreen(ST77XX_BLACK);
-      
-      Serial.println("Serial initiated");
     }
 
     void placeSquare(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint16_t bgColor) {
