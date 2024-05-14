@@ -11,15 +11,15 @@ class TFT {
     uint8_t tileSize = 60;
 
     int16_t getColorByValue(int val) {
-		switch(val) {
-			case 0:
-			case 2:
-			case 4:
-			return 0x736C;
-			default:
-			return 0xFFBE;
-		}
-	}
+    switch(val) {
+      case 0:
+      case 2:
+      case 4:
+      return 0x736C;
+      default:
+      return 0xFFBE;
+    }
+  }
   
     int16_t getBgColorByValue(int val) {
       switch(val) {
