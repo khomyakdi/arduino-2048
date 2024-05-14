@@ -1,5 +1,5 @@
 // Pin wiring for ArNano
-//TFT
+// TFT
 // GND ----- GND
 // VCC ----- 3V3
 // SCL ----- D13
@@ -8,7 +8,7 @@
 // DC ------ D7
 // CS ------ D8
 // BLK ----- 3V3
-//Buttons
+// Buttons
 // UP ------ 5
 // DOWN ---- 4
 // LEFT ---- 3
@@ -36,7 +36,8 @@ ClickButton rightBtn = ClickButton(K1);
 TFT tft = TFT(&tftDisplay, 240, 240, 60);
 GameField gameField = GameField();
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   randomSeed(analogRead(0));
 
@@ -49,31 +50,36 @@ void setup() {
   tft.drawField(gameField.field);
 }
 
-void loop() {
-  if(upBtn.isPressed()) {
+void loop()
+{
+  if (upBtn.isPressed())
+  {
     Serial.println("up");
     gameField.shiftTop();
     tft.drawField(gameField.field);
     return;
   }
 
-  if(downBtn.isPressed()) {
+  if (downBtn.isPressed())
+  {
     Serial.println("down");
     gameField.shiftBottom();
     tft.drawField(gameField.field);
     return;
   }
-  
-  if(leftBtn.isPressed()) {    
+
+  if (leftBtn.isPressed())
+  {
     Serial.println("left");
-    gameField.shiftLeft();    
+    gameField.shiftLeft();
     tft.drawField(gameField.field);
     return;
   }
-  
-  if(rightBtn.isPressed()) {
+
+  if (rightBtn.isPressed())
+  {
     Serial.println("right");
-    gameField.shiftRight();    
+    gameField.shiftRight();
     tft.drawField(gameField.field);
     return;
   }
