@@ -69,39 +69,40 @@ class TFT {
     }
 
     void placeSquare(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint16_t borderColor, uint16_t bgColor) {
-    this->tft->drawRect(x, y, width, height,borderColor);
-    this->tft->fillRect(x+1, y+1, width - 1, height - 1, bgColor);
+      this->tft->drawRect(x, y, width, height,borderColor);
+      this->tft->fillRect(x+1, y+1, width - 1, height - 1, bgColor);
     }
 
     void placeText(uint8_t x, uint8_t y, String text, uint16_t color, uint8_t size) {
-    this->tft->setCursor(x,y);
-    this->tft->setTextColor(color);
-    this->tft->setTextSize(size);
-    this->tft->print(text);
+      this->tft->setCursor(x,y);
+      this->tft->setTextColor(color);
+      this->tft->setTextSize(size);
+      this->tft->print(text);
     }
 
-  void drawField(int **field) {
-  uint8_t x = 0;
-  uint8_t y = 0;
-  
-  for(int i = 0; i<4;i = i + 1) {
-    for(int j = 0; j < 4; j = j + 1) {
-      x = i*tileSize;
-      y = j*tileSize;
-      int fieldValue = field[j][i];
-      String val = fieldValue == 0 ? String(' ') : String(fieldValue);
-      int16_t tileBgColor = getBgColorByValue(fieldValue);
-      placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
-      int16_t tileColor = getColorByValue(fieldValue);
-      int8_t textSize = 3;
-      if(fieldValue > 64)
-        textSize = 2;
+    void drawField(int **field) {
+      uint8_t x = 0;
+      uint8_t y = 0;
+      
+      for(int i = 0; i<4;i = i + 1)
+        for(int j = 0; j < 4; j = j + 1) {
+          x = i*tileSize;
+          y = j*tileSize;
 
-      if(fieldValue > 512)
-        textSize = 1;
-        
-      placeText(x+5, y+5, val, tileColor, textSize);
+          int fieldValue = field[j][i];
+          String val = fieldValue == 0 ? String(' ') : String(fieldValue);
+          int16_t tileBgColor = getBgColorByValue(fieldValue);
+          placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
+
+          int16_t tileTextColor = getColorByValue(fieldValue);
+          int8_t textSize = 3;
+          if(fieldValue > 64)
+            textSize = 2;
+
+          if(fieldValue > 512)
+            textSize = 1;
+            
+          placeText(x+5, y+5, val, tileTextColor, textSize);
+        }
     }
-  }
-}
 };
