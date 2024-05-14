@@ -33,14 +33,14 @@ ClickButton downBtn = ClickButton(K3);
 ClickButton leftBtn = ClickButton(K2);
 ClickButton rightBtn = ClickButton(K1);
 
-TFT tft = TFT(&tftDisplay, 240, 240);
+TFT tft = TFT(&tftDisplay, 240, 240, 60);
 GameField gameField = GameField();
 
 void setup() {
   Serial.begin(9600);
   randomSeed(analogRead(0));
 
-  tft.init(2, ST77XX_BLACK);
+  tft.init();
   upBtn.init();
   downBtn.init();
   leftBtn.init();

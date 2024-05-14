@@ -7,8 +7,7 @@ class TFT {
     Adafruit_ST7789* tft;
     uint16_t tftWidth;
     uint16_t tftHeight;
-    uint16_t bg;
-    uint8_t tileSize = 60;
+    uint16_t tSize;
 
     int16_t getColorByValue(int val) {
     switch(val) {
@@ -53,17 +52,17 @@ class TFT {
     }   
 
   public:
-    TFT( Adafruit_ST7789* screen, uint16_t width, uint16_t height) {
+    TFT( Adafruit_ST7789* screen, uint16_t width, uint16_t height, uint16_t tileSize) {
         tft = screen;
         tftWidth = width;
         tftHeight = height;
+        tSize = tileSize;
     }
     
-    void init(uint8_t rotation, uint16_t bgColor) {
+    void init() {
       this->tft->init(tftWidth, tftHeight);
       this->tft->setRotation(2);
-      bg = bgColor;
-      this->tft->fillScreen(bgColor);
+      this->tft->fillScreen(ST77XX_BLACK);
       
       Serial.println("Serial initiated");
     }
@@ -86,13 +85,13 @@ class TFT {
       
       for(int i = 0; i<4;i = i + 1)
         for(int j = 0; j < 4; j = j + 1) {
-          x = i*tileSize;
-          y = j*tileSize;
+          x = i*tSize;
+          y = j*tSize;
 
           int fieldValue = field[j][i];
           String val = fieldValue == 0 ? String(' ') : String(fieldValue);
           int16_t tileBgColor = getBgColorByValue(fieldValue);
-          placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
+          placeSquare(x, y, tSize, tSize, ST77XX_BLACK, tileBgColor);
 
           int16_t tileTextColor = getColorByValue(fieldValue);
           int8_t textSize = 3;
