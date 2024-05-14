@@ -28,82 +28,13 @@
 #define K4 5 // Up button
 
 Adafruit_ST7789 tftDisplay = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
-TFT tft = TFT(&tftDisplay, 240, 240);
-
 ClickButton upBtn = ClickButton(K4);
 ClickButton downBtn = ClickButton(K3);
 ClickButton leftBtn = ClickButton(K2);
 ClickButton rightBtn = ClickButton(K1);
 
+TFT tft = TFT(&tftDisplay, 240, 240);
 GameField gameField = GameField();
-
-int16_t getColorByValue(int val) {
-  switch(val) {
-    case 0:
-    case 2:
-    case 4:
-      return 0x736C;
-    default:
-      return 0xFFBE;
-  }
-}
-
-int16_t getBgColorByValue(int val) {
-  switch(val) {
-    case 0:
-      return 0xBD74;
-    case 2:
-      return 0xEF3B;
-    case 4:
-      return 0xEF19;
-    case 8:
-     return 0xF58F;
-    case 16:
-     return 0xF4AC;
-    case 32:
-      return 0xF3EB;
-    case 64:
-      return 0xF2E7;
-    case 128:
-      return 0xEE8E;
-    case 256:
-      return 0xEE6C;
-    case 512:
-      return 0xEE4A;
-    case 1024:
-      return 0xEE27;
-    case 2048:
-      return 0xEE05;
-    default:
-      return 0x39C6;
-  }
-}
-
-const uint16_t tileSize = 60;
-void drawField() {
-  uint8_t x = 0;
-  uint8_t y = 0;
-  
-  for(int i = 0; i<4;i = i + 1) {
-    for(int j = 0; j < 4; j = j + 1) {
-      x = i*tileSize;
-      y = j*tileSize;
-      int fieldValue = gameField.field[j][i];
-      String val = fieldValue == 0 ? String(' ') : String(fieldValue);
-      int16_t tileBgColor = getBgColorByValue(fieldValue);
-      tft.placeSquare(x, y, tileSize, tileSize,ST77XX_BLACK, tileBgColor);
-      int16_t tileColor = getColorByValue(fieldValue);
-      int8_t textSize = 3;
-      if(fieldValue > 64)
-        textSize = 2;
-
-      if(fieldValue > 512)
-        textSize = 1;
-        
-      tft.placeText(x+5, y+5, val, tileColor, textSize);
-    }
-  }
-}
 
 void setup() {
   Serial.begin(9600);
@@ -115,35 +46,35 @@ void setup() {
   leftBtn.init();
   rightBtn.init();
 
-  drawField();
+  tft.drawField(gameField.field);
 }
 
 void loop() {
   if(upBtn.isPressed()) {
     Serial.println("up");
     gameField.shiftTop();
-    drawField();
+    tft.drawField(gameField.field);
     return;
   }
 
   if(downBtn.isPressed()) {
     Serial.println("down");
     gameField.shiftBottom();
-    drawField();
+    tft.drawField(gameField.field);
     return;
   }
   
   if(leftBtn.isPressed()) {    
     Serial.println("left");
     gameField.shiftLeft();    
-    drawField();
+    tft.drawField(gameField.field);
     return;
   }
   
   if(rightBtn.isPressed()) {
     Serial.println("right");
     gameField.shiftRight();    
-    drawField();
+    tft.drawField(gameField.field);
     return;
   }
 }
